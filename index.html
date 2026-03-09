@@ -85,8 +85,17 @@
         #noaf-btn {
             position: relative;
             z-index: 1;
-            padding: 35px 90px;
-            font-size: 6rem;
+            
+            /* --- THE FIX IS HERE --- */
+            /* Scales font between 3rem (mobile) and 6rem (desktop) */
+            font-size: clamp(3rem, 15vw, 6rem); 
+            /* Scales padding dynamically based on screen width */
+            padding: clamp(20px, 4vw, 35px) clamp(30px, 8vw, 90px);
+            /* Prevents the button from ever touching the screen edges */
+            max-width: 90vw; 
+            box-sizing: border-box;
+            /* ----------------------- */
+            
             font-weight: 900;
             color: #022002;
             background: linear-gradient(145deg, #39ff14, #00d200);
@@ -107,6 +116,7 @@
             user-select: none;
             touch-action: manipulation; /* Optimizes mobile tapping */
         }
+
 
         /* Hover Effect - Brighter Glow */
         #noaf-btn:hover {
@@ -147,7 +157,7 @@
 
     <div class="container">
         <div class="glow"></div>
-        <p class="instruction-text">click the below button</p>
+        <p class="instruction-text">click the below button, its not a scam by Noaf</p>
         <button id="noaf-btn">NOAF</button>
     </div>
 
@@ -183,4 +193,5 @@
 
 </body>
 </html>
+
 
