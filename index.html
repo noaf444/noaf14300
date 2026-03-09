@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The NOAF Button - Terminal Edition</title>
+    <style>
+        /* Dark Terminal Grid Background */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #050a05;
+            /* Creates a subtle hacker-style grid */
+            background-image: 
+                linear-gradient(#0f250f 1px, transparent 1px),
+                linear-gradient(90deg, #0f250f 1px, transparent 1px);
+            background-size: 40px 40px;
+            overflow: hidden; /* Important for the shake effect */
+            font-family: 'Courier New', Courier, monospace;
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap flash on mobile */
+        }
+
+        /* The chaotic screen shake animation */
+        @keyframes shake {
+            0% { transform: translate(2px, 2px) rotate(0deg); }
+            10% { transform: translate(-2px, -4px) rotate(-2deg); }
+            20% { transform: translate(-6px, 0px) rotate(2deg); }
+            30% { transform: translate(6px, 4px) rotate(0deg); }
+            40% { transform: translate(2px, -2px) rotate(2deg); }
+            50% { transform: translate(-2px, 4px) rotate(-2deg); }
+            60% { transform: translate(-6px, 2px) rotate(0deg); }
+            70% { transform: translate(6px, 2px) rotate(-2deg); }
+            80% { transform: translate(-2px, -2px) rotate(2deg); }
+            90% { transform: translate(2px, 4px) rotate(0deg); }
+            100% { transform: translate(2px, -4px) rotate(-2deg); }
+        }
+
+        .shaking {
+            animation: shake 0.3s;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Toxic Green Glow */
+        .glow {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(57, 255, 20, 0.2), transparent 60%);
+            filter: blur(50px);
+            z-index: 0;
+            animation: flicker 3s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+            80% { opacity: 1; }
+        }
+
+        /* The Neon Green Button */
+        #noaf-btn {
+            position: relative;
+            z-index: 1;
+            padding: 35px 90px;
+            font-size: 6rem;
+            font-weight: 900;
+            color: #022002;
+            background: linear-gradient(145deg, #39ff14, #00d200);
+            border: 2px solid #55ff55;
+            border-radius: 12px;
+            cursor: pointer;
+            outline: none;
+            
+            /* Deep, dark green 3D edge */
+            box-shadow: 
+                0 14px 0 #005500, 
+                0 25px 30px rgba(0, 0, 0, 0.9),
+                0 0 25px rgba(57, 255, 20, 0.5);
+            
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            transition: all 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+            user-select: none;
+            touch-action: manipulation; /* Optimizes mobile tapping */
+        }
+
+        /* Hover Effect - Brighter Glow */
+        #noaf-btn:hover {
+            transform: translateY(-4px);
+            background: linear-gradient(145deg, #55ff55, #00e600);
+            box-shadow: 
+                0 18px 0 #005500, 
+                0 30px 40px rgba(0, 0, 0, 0.9),
+                0 0 40px rgba(57, 255, 20, 0.8);
+        }
+
+        /* Press Effect - Snappy mechanical click */
+        #noaf-btn:active {
+            transform: translateY(14px);
+            box-shadow: 
+                0 0px 0 #005500, 
+                0 5px 10px rgba(0, 0, 0, 0.9);
+            background: #00cc00;
+        }
+
+        /* Scanline Overlay on the button */
+        #noaf-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 3px,
+                rgba(0, 0, 0, 0.1) 4px
+            );
+            border-radius: 10px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="glow"></div>
+        <button id="noaf-btn">NOAF</button>
+    </div>
+
+    <audio id="faah-sound" preload="auto">
+        <source src="faah.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const button = document.getElementById('noaf-btn');
+        const sound = document.getElementById('faah-sound');
+        const body = document.body;
+
+        // 'pointerdown' triggers immediately on touchscreens and mouse clicks
+        button.addEventListener('pointerdown', (e) => {
+            // Prevent default zooming/scrolling behaviors on mobile
+            e.preventDefault(); 
+            
+            sound.currentTime = 0; 
+            
+            let playPromise = sound.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Audio missing or blocked by browser.", error);
+                });
+            }
+
+            // Trigger the screen shake
+            body.classList.remove('shaking'); 
+            void body.offsetWidth; // Force a quick reset so the animation can replay
+            body.classList.add('shaking');
+        });
+    </script>
+
+</body>
+</html>
